@@ -1,0 +1,23 @@
+{
+  "name": "quote_bot",
+  "version": "0.1.0",
+  "description": "Quote messages and store quotes",
+  "main": "main.js",
+  "scripts": {
+    "start": "nodemon main.js",
+    "fstart": "pm2 start --name quotebot main.js"
+  },
+  "dependencies": {
+    "bufferutil": "4.0.2",
+    "discord.js": "12.4.1",
+    "dotenv": "8.0.0",
+    "erlpack": "discord/erlpack",
+    "mongoose": "5.10.13",
+    "mongoose-sequence": "5.3.0",
+    "utf-8-validate": "5.0.3",
+    "zlib-sync": "0.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.0"
+  }
+}
