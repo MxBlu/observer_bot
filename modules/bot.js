@@ -10,15 +10,12 @@ module.exports = (discord, db, imm, logger) => {
   var errLogDisabled = false;
 
   // Command handlers
-  const quoteEventHandler       = require('./command_handlers/quote_event')(discord, db, imm, logger);
-  const quoteManagementHandler  = require('./command_handlers/quote_management')(discord, db, imm, logger);
+  const channelManagementHandler  = require('./command_handlers/channel_management')(discord, db, imm, logger);
 
   const commandHandlers = {
     "help": helpHandler,
-    "listquotes": quoteManagementHandler.listquotesHandler,
-    "dumpquotes": quoteManagementHandler.listquotesHandler,
-    "getquote": quoteManagementHandler.getquoteHandler,
-    "delquote": quoteManagementHandler.delquoteHandler
+    "notifsitechannel": channelManagementHandler.notifsitechannelHandler,
+    "unnotifsitechannel": channelManagementHandler.unnotifsitechannelHandler
   };
 
   // Discord event handlers
@@ -63,17 +60,10 @@ module.exports = (discord, db, imm, logger) => {
     }
 
     let msg = 
-      "Quote Bot v2 - Quote and save messages\n" + 
+      "Observer - Watch sites for changes\n" + 
       "\n" + 
-      "Add a #️⃣ react to a message to quote the message\n" + 
-      "Add a ♿ or :omegaChair: emote to save a quote\n" + 
-      "\n" + 
-      "!listquotes [<id start>] - Get quotes from this guild, optionally starting from <id start>\n" + 
-      "!listquotes <filter> [<id start>] - Get quotes from a given channel or author, optionally starting from <id start>\n" + 
-      "!dumpquotes <filter> [<id start>] - Takes the same args as listquotes, except displays all the quotes\n" +
-      "!getquote - Get a random quote\n" + 
-      "!getquote <id> - Get a quote by given id\n" + 
-      "!delquote <id> - Delete a quote by given id";
+      "!notifsitechannel <role> - Set current channel as the notification channel for given role\n" +
+      "!unnotifsitechannel <role> - Remove notif channel from given role\n";
 
     sendMessage(command.message.channel, msg);
   }
