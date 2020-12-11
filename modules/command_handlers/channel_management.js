@@ -1,4 +1,4 @@
-const { sendCmdMessage } = require("../../util/bot_utils");
+const { sendCmdMessage, checkIfSubscribed, stringEquivalence, stringSearch } = require("../../util/bot_utils");
 
 module.exports = (discord, db, imm, logger) => {
 
@@ -38,7 +38,7 @@ module.exports = (discord, db, imm, logger) => {
     },
     
     unnotifsitechannelHandler: async function (command) {
-      if (! await checkIfSubscribed(command.message)) {
+      if (! await checkIfSubscribed(db, command.message.guild.id, command.message.channel.id)) {
         // Only handle if listening to this channel already
         logger.info(`Not listening to channel #${command.message.channel.name}, ignoring`);
         return;

@@ -54,12 +54,12 @@ function sendMessage(targetChannel, msg) {
 }
 
 // Check if a given channel has any roles subscribed to it
-async function checkIfSubscribed(guildId, channelId) {
-  const roles = await db.getRoles(guild.id);
+async function checkIfSubscribed(db, guildId, channelId) {
+  const roles = await db.getRoles(guildId);
 
   for (let r of roles) {
-    let nc = await db.getNotifChannel(guild.id, r);
-    if (nc == channel.id) {
+    let nc = await db.getNotifChannel(guildId, r);
+    if (nc == channelId) {
       return true;
     }
   }
@@ -92,5 +92,6 @@ function stringSearch(str1, str2) {
 
 exports.sendCmdMessage = sendCmdMessage;
 exports.sendMessage = sendMessage;
+exports.checkIfSubscribed = checkIfSubscribed;
 exports.stringEquivalence = stringEquivalence;
 exports.stringSearch = stringSearch;
