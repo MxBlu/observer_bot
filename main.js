@@ -1,5 +1,4 @@
 const Discord       = require('discord.js');
-const mongoose      = require('mongoose');
 
 require('dotenv').config();
 

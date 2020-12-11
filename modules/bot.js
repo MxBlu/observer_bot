@@ -54,7 +54,7 @@ module.exports = (discord, db, imm, logger) => {
 
   function helpHandler(command) {
     if (command.arguments == null ||
-          command.arguments[0] !== "quotebot") {
+          command.arguments[0] !== "observer") {
       // Only send help for !help quotebot
       return;
     }
