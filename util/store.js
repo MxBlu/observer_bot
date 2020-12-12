@@ -116,6 +116,10 @@ module.exports = (redisHost, redisPort, redisDb, logger) => {
       return new Set(await rclient.smembers('all_sites'));
     },
 
+    delFromAllSites: async (site) => {
+      return rclient.srem('all_sites', site);
+    },
+
     // Add alertable site for a given role and guild
     addSite: async (guildId, roleId, site) => {
       return Promise.all([
@@ -140,6 +144,10 @@ module.exports = (redisHost, redisPort, redisDb, logger) => {
 
     setSiteData: (site, data) => {
       siteData[site] = data;
+    },
+
+    delSiteData: (site) => {
+      delete siteData[site];
     }
 
   }

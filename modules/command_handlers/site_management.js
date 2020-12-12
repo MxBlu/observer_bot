@@ -1,6 +1,8 @@
 const { sendCmdMessage, checkIfSubscribed, stringEquivalence } = require("../../util/bot_utils");
 const fetch = require('node-fetch');
 
+const adminUser = process.env.DISCORD_ADMINUSER;
+
 module.exports = (discord, db, imm, logger) => {
 
   return {
@@ -127,10 +129,9 @@ module.exports = (discord, db, imm, logger) => {
       }
     },
 
-    hassitechangedHandler: async (command) => {
-      if (! await checkIfSubscribed(db, command.message.guild.id, command.message.channel.id)) {
-        // Only handle if listening to this channel already
-        logger.info(`Not listening to channel #${command.message.channel.name}, ignoring`);
+    purgesiteHandler: async (command) => {
+      if (command.message.author.id != adminUser) {
+        logger.info(`Non-admin user ${command.message.author.username} attempted to use !purgesite`);
         return;
       }
 
@@ -138,26 +139,20 @@ module.exports = (discord, db, imm, logger) => {
       case 1:
         let site = command.arguments[0];
 
-        let oldSiteData = db.getSiteData(site);
-        let newSiteData = null;
-        try {
-          const response = await fetch(site);
-          if (response.ok) {
-            newSiteData = await response.text();
-            db.setSiteData(site, newSiteData);
-          } else {
-            db.setSiteData(site, null);
+        // For every role in every guild, remove the site
+        let guilds = db.getGuilds();
+        for (let g of guilds) {
+          let roles = await db.getRoles(g);
+          for (let r of roles) {
+            db.delSite(g, r, site);
           }
-        } catch (e) {
-          sendCmdMessage(command.message, 'Error: Invalid url or connection issues, try again', 2, logger);
-          return;
         }
+        
+        // Remove from site caches
+        db.delFromAllSites(site);
+        db.delSiteData(site);
 
-        if (oldSiteData == newSiteData) {
-          sendCmdMessage(command.message, `Site data has NOT changed since last call`, 2, logger);
-        } else {
-          sendCmdMessage(command.message, `Site data has changed since last call`, 2, logger);
-        }
+        sendCmdMessage(command.message, `**!!** Site <${site}> purged from bot **!!**`, 3, logger);
         return;
       default:
         sendCmdMessage(command.message, 'Error: incorrect argument count', 3, logger);

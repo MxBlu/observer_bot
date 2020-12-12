@@ -20,6 +20,7 @@ module.exports = (discord, db, imm, logger) => {
     "subsite": siteManagementHandler.subsiteHandler,
     "unsubsite": siteManagementHandler.unsubsiteHandler,
     "listsitesubs": siteManagementHandler.listsitesubsHandler,
+    "purgesite": siteManagementHandler.purgesiteHandler,
     "hassitechanged": siteNotificationHandler.hassitechangedHandler
   };
 
