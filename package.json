@@ -1,11 +1,11 @@
 {
-  "name": "quote_bot",
+  "name": "observer_bot",
   "version": "0.1.0",
-  "description": "Quote messages and store quotes",
+  "description": "Notify on page changes",
   "main": "main.js",
   "scripts": {
     "start": "nodemon main.js",
-    "fstart": "pm2 start --name quotebot main.js"
+    "fstart": "pm2 start --name observerbot main.js"
   },
   "dependencies": {
     "bufferutil": "4.0.2",
