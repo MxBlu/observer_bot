@@ -118,9 +118,18 @@ module.exports = (discord, db, imm, logger) => {
         const sites = await db.getSites(guild.id, role.id);
         if (sites == null || sites.size == 0) {
           sendCmdMessage(command.message, 'No watched sites', 3, logger);
+          return;
         }
 
-        let str = Array.from(sites).map(s => `<${s}>`).join('\n');
+        const siteData = {};
+        for (let site of sites) {
+          siteData[site] = db.getSiteData(site);
+          if (siteData[site] == null) {
+            siteData[site] = {};
+          }
+        }
+
+        let str = Array.from(sites).map(s => `<${s}> - Last known updated ${siteData[s].lastUpdated} status ${siteData[s].status}`).join('\n');
         sendCmdMessage(command.message, str, 3, logger);
         return;
       default:
