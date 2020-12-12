@@ -11,6 +11,7 @@ module.exports = (discord, db, imm, logger) => {
   // Command handlers
   const channelManagementHandler  = require('./command_handlers/channel_management')(discord, db, imm, logger);
   const siteManagementHandler = require('./command_handlers/site_management')(discord, db, imm, logger);
+  const siteNotificationHandler = require('./command_handlers/site_notification')(discord, db, imm, logger);
 
   const commandHandlers = {
     "help": helpHandler,
@@ -18,8 +19,8 @@ module.exports = (discord, db, imm, logger) => {
     "unnotifsitechannel": channelManagementHandler.unnotifsitechannelHandler,
     "subsite": siteManagementHandler.subsiteHandler,
     "unsubsite": siteManagementHandler.unsubsiteHandler,
-    "listsitesubs": siteManagementHandler.listquotesHandler,
-    "hassitechanged": siteManagementHandler.hassitechangedHandler
+    "listsitesubs": siteManagementHandler.listsitesubsHandler,
+    "hassitechanged": siteNotificationHandler.hassitechangedHandler
   };
 
   // Discord event handlers
@@ -118,5 +119,6 @@ module.exports = (discord, db, imm, logger) => {
   discord.on('guildCreate', joinServerHandler);
   discord.on('guildDelete', leaveServerHandler);
 
+  imm.subscribe('siteUpdated', siteNotificationHandler.siteUpdatedHandler);
   imm.subscribe('newErrorLog', errorLogHandler);
 }
