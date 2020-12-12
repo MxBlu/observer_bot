@@ -21,6 +21,9 @@ module.exports = (redisHost, redisPort, redisDb, logger) => {
   // Guilds can be ephemeral
   var guilds = new Set();
 
+  // Site cache, for comparing, ephemeral.
+  var siteData = {};
+
   rclient.on('error', (err) => {
     logger.error(`Redis error: ${err}`);
   });
@@ -76,34 +79,32 @@ module.exports = (redisHost, redisPort, redisDb, logger) => {
       return rclient.del(`${guildId}_${roleId}_notifChannel`);
     },
 
-    // Fetch alertable titles for a given role and guild, returns set
-    getTitles: async (guildId, roleId) => {
-      return new Set(await rclient.smembers(`${guildId}_${roleId}_titles`));
+    // Fetch alertable sites for a given role and guild, returns set
+    getSites: async (guildId, roleId) => {
+      return new Set(await rclient.smembers(`${guildId}_${roleId}_sites`));
     },
 
-    // Add alertable title for a given role and guild
-    addTitle: async (guildId, roleId, titleId) => {
-      return rclient.sadd(`${guildId}_${roleId}_titles`, titleId);
+    // Add alertable site for a given role and guild
+    addSite: async (guildId, roleId, site) => {
+      return rclient.sadd(`${guildId}_${roleId}_sites`, site);
     },
 
-    // Delete alertable title for a given role and guild
-    delTitle: async (guildId, roleId, titleId) => {
-      return rclient.srem(`${guildId}_${roleId}_titles`, titleId);
+    // Delete alertable site for a given role and guild
+    delSite: async (guildId, roleId, site) => {
+      return rclient.srem(`${guildId}_${roleId}_sites`, site);
     },
 
-    // Delete all alertable titles for a given role and guild
-    clearTitles: async (guildId, roleId) => {
-      return rclient.del(`${guildId}_${roleId}_titles`);
+    // Delete all alertable sites for a given role and guild
+    clearSites: async (guildId, roleId) => {
+      return rclient.del(`${guildId}_${roleId}_sites`);
     },
 
-    // Fetch title name for a given title id
-    getTitleName: async (titleId) => {
-      return rclient.get(`title_${titleId}`);
+    getSiteData: (site) => {
+      return siteData[site];
     },
 
-    // Set title name for a given title id
-    setTitleName: async (titleId, titleName) => {
-      return rclient.set(`title_${titleId}`, titleName);
+    setSiteData: (site, data) => {
+      siteData[site] = data;
     }
 
   }

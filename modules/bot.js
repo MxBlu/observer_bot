@@ -11,11 +11,16 @@ module.exports = (discord, db, imm, logger) => {
 
   // Command handlers
   const channelManagementHandler  = require('./command_handlers/channel_management')(discord, db, imm, logger);
+  const siteManagementHandler = require('./command_handlers/site_management')(discord, db, imm, logger);
 
   const commandHandlers = {
     "help": helpHandler,
     "notifsitechannel": channelManagementHandler.notifsitechannelHandler,
-    "unnotifsitechannel": channelManagementHandler.unnotifsitechannelHandler
+    "unnotifsitechannel": channelManagementHandler.unnotifsitechannelHandler,
+    "subsite": siteManagementHandler.subsiteHandler,
+    "unsubsite": siteManagementHandler.unsubsiteHandler,
+    "listsitesubs": siteManagementHandler.listquotesHandler,
+    "hassitechanged": siteManagementHandler.hassitechangedHandler
   };
 
   // Discord event handlers
@@ -63,7 +68,10 @@ module.exports = (discord, db, imm, logger) => {
       "Observer - Watch sites for changes\n" + 
       "\n" + 
       "!notifsitechannel <role> - Set current channel as the notification channel for given role\n" +
-      "!unnotifsitechannel <role> - Remove notif channel from given role\n";
+      "!unnotifsitechannel <role> - Remove notif channel from given role\n" +
+      "!subsite <role> <url> - Watch provided url for given role\n" +
+      "!unsubsite <role> <url> - Stop watching provided url for given role\n" +
+      "!listsitesubs <role> - List all sites watched for given role\n";
 
     sendMessage(command.message.channel, msg);
   }
