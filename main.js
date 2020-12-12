@@ -22,6 +22,10 @@ var db = require('./util/store')(redisHost, redisPort, redisDb, logger);
 const discordToken = process.env.DISCORD_TOKEN;
 var discord = new Discord.Client();
 
+// Setup scraper
+messenger.newTopic('siteUpdated');
+require('./modules/scraper')(db, messenger, logger);
+
 // Setup Discord services
 require('./modules/bot')(discord, db, messenger, logger);
 discord.login(discordToken);
