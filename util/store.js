@@ -37,6 +37,7 @@ module.exports = (redisHost, redisPort, redisDb, logger) => {
 
   // Clean up unused sites regularly
   async function vacuumSitesTask () {
+    logger.info('Running vacuum task...', 3);
     // Setup promises to get all sites currently subscribed
     let promises = [];
     for (let g of guilds) {
@@ -50,6 +51,7 @@ module.exports = (redisHost, redisPort, redisDb, logger) => {
 
     // Remove any sites that no longer have a subscriber
     oldSites.filter(s => !sites.has(s)).forEach(s => {
+      logger.info(`Vacuumed ${s}`, 3);
       rclient.srem('all_sites', s);
       delete siteData[s];
     });

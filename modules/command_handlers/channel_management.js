@@ -4,7 +4,7 @@ module.exports = (discord, db, imm, logger) => {
 
   return {
 
-    notifsitechannelHandler: async function (command) {
+    notifsitechannelHandler: async (command) => {
       switch (command.arguments.length) {
       case 1:
         const roleName = command.arguments[0];
@@ -37,7 +37,7 @@ module.exports = (discord, db, imm, logger) => {
       }
     },
     
-    unnotifsitechannelHandler: async function (command) {
+    unnotifsitechannelHandler: async (command) => {
       if (! await checkIfSubscribed(db, command.message.guild.id, command.message.channel.id)) {
         // Only handle if listening to this channel already
         logger.info(`Not listening to channel #${command.message.channel.name}, ignoring`);
