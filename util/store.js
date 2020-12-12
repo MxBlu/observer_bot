@@ -1,5 +1,8 @@
 const Redis         = require('ioredis');
 
+// Feed requesting settings
+const vacuumInterval = process.env.REDIS_VACUUM_INTERVAL;
+
 /*
   Storage backend using Redis for persistence
   Guilds are stored in an ephemeral fashion, since the source of truth is Discord itself
@@ -31,6 +34,28 @@ module.exports = (redisHost, redisPort, redisDb, logger) => {
   rclient.once('connect', () => {
     logger.info('Redis connected', 1);
   });
+
+  // Clean up unused sites regularly
+  async function vacuumSitesTask () {
+    // Setup promises to get all sites currently subscribed
+    let promises = [];
+    for (let g of guilds) {
+      let roles = await rclient.smembers(`${g}_roles`);
+      roles.forEach(r => promises.push(rclient.smembers(`${g}_${r}_sites`)));
+    }
+
+    // Resolve promises for current sites, and fetch cache of all sites
+    let sites = new Set((await Promise.all(promises)).flat());
+    let oldSites = await rclient.smembers('all_sites');
+
+    // Remove any sites that no longer have a subscriber
+    oldSites.filter(s => !sites.has(s)).forEach(s => {
+      rclient.srem('all_sites', s);
+      delete siteData[s];
+    });
+  }
+
+  setInterval(vacuumSitesTask, vacuumInterval);
 
   return {
 
@@ -84,9 +109,17 @@ module.exports = (redisHost, redisPort, redisDb, logger) => {
       return new Set(await rclient.smembers(`${guildId}_${roleId}_sites`));
     },
 
+    // Fetch all sites observed 
+    getAllSites: async () => {
+      return new Set(await rclient.smembers('all_sites'));
+    },
+
     // Add alertable site for a given role and guild
     addSite: async (guildId, roleId, site) => {
-      return rclient.sadd(`${guildId}_${roleId}_sites`, site);
+      return Promise.all([
+        rclient.sadd(`${guildId}_${roleId}_sites`, site),
+        rclient.sadd('all_sites', site)
+      ]);
     },
 
     // Delete alertable site for a given role and guild
