@@ -1,7 +1,6 @@
 const { sendMessage } = require('../util/bot_utils');
 
 const errStream = process.env.DISCORD_ERRSTREAM;
-const adminUser = process.env.DISCORD_ADMINUSER;
 
 const commandSyntax = /^\s*!([A-Za-z]+)((?: [^ ]+)+)?\s*$/;
 
