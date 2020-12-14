@@ -6,7 +6,7 @@ const refreshInterval = process.env.SCRAPER_REFRESH_INTERVAL;
 module.exports = (db, imm, logger) => {
 
   async function timerTask() {
-    logger.info('Running scraper...', 3);
+    logger.info('Running scraper...', 4);
 
     let sites = await db.getAllSites();
 
