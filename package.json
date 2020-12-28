@@ -15,7 +15,8 @@
     "ioredis": "^4.19.2",
     "node-fetch": "^2.6.1",
     "utf-8-validate": "5.0.3",
-    "zlib-sync": "0.1.7"
+    "zlib-sync": "0.1.7",
+    "zookeeper": "^4.6.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.0"
