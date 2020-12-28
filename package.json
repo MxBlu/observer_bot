@@ -4,8 +4,8 @@
   "description": "Notify on page changes",
   "main": "main.js",
   "scripts": {
-    "start": "nodemon main.js",
-    "fstart": "pm2 start --name observerbot main.js"
+    "start": "nodemon src/main.js",
+    "fstart": "pm2 start --name observerbot src/main.js"
   },
   "dependencies": {
     "bufferutil": "4.0.2",
