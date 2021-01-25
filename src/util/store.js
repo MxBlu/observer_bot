@@ -57,7 +57,7 @@ module.exports = (redisHost, redisPort, redisDb, logger) => {
     });
   }
 
-  setInterval(vacuumSitesTask, vacuumInterval);
+  // setInterval(vacuumSitesTask, vacuumInterval);
 
   return {
 
