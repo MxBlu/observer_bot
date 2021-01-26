@@ -40,6 +40,7 @@ module.exports = (db, imm, logger) => {
           let newSiteData = {
             data: siteText,
             status: response.status,
+            oldData: oldSiteData,
             lastUpdated: new Date()
           };
           db.setSiteData(s, newSiteData);

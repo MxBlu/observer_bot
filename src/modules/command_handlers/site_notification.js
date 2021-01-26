@@ -1,4 +1,5 @@
 const { sendCmdMessage, sendMessage, checkIfSubscribed } = require("../../util/bot_utils");
+const { produceDiffMsg } = require('../../util/diff');
 const fetch = require('node-fetch');
 
 module.exports = (discord, db, imm, logger) => {
@@ -11,6 +12,9 @@ module.exports = (discord, db, imm, logger) => {
         logger.error(`Error: notifying for a guild no longer available: ${siteUpdate.guild}`);
         return;
       }
+
+      logger.error(`${siteUpdate.site} update, diff below`);
+      logger.error(produceDiffMsg(siteUpdate.siteData.oldData.data, siteUpdate.siteData.data));
 
       let channels = {};
       for (let roleId of siteUpdate.roles) {
