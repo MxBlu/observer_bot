@@ -19,5 +19,5 @@ exports.produceDiffMsg = function(txt1, txt2) {
     } else {
       return content;
     }
-  }).join();
+  }).join('');
 }
