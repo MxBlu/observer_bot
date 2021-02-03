@@ -13,8 +13,8 @@ module.exports = (discord, db, imm, logger) => {
         return;
       }
 
-      logger.error(`${siteUpdate.site} update, diff below`);
-      logger.error(produceDiffMsg(siteUpdate.siteData.oldData.data, siteUpdate.siteData.data));
+      // logger.error(`${siteUpdate.site} update, diff below`);
+      // logger.error(produceDiffMsg(siteUpdate.siteData.oldData.data, siteUpdate.siteData.data));
 
       let channels = {};
       for (let roleId of siteUpdate.roles) {
