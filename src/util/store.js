@@ -9,8 +9,7 @@ const vacuumInterval = process.env.REDIS_VACUUM_INTERVAL;
 
   Store format:
  - <guildId>_roles: Set() [ <roleId> ]
- - <guildId>_<roleId>_name: String
- - <guildId>_<roleId>_notifChannel: String
+ - <guildId>_<roleId>_notifChannel: <channelId>
  - <guildId>_<roleId>_titles: Set() [ <titleId> ]
  - title_<titleId>: String
 */
@@ -36,6 +35,7 @@ module.exports = (redisHost, redisPort, redisDb, logger) => {
   });
 
   // Clean up unused sites regularly
+  // TODO: FIX, not updated for new model
   async function vacuumSitesTask () {
     logger.info('Running vacuum task...', 3);
     // Setup promises to get all sites currently subscribed

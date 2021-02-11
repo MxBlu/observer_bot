@@ -50,7 +50,7 @@ module.exports = (db, imm, logger) => {
           logger.info(`Scraper: No change detected for ${s}`, 4);
         }
       } catch (e) {
-        logger.info(`Scraper: failed to fetch ${s}: ${e}`, 1);
+        logger.error(`Scraper: failed to fetch ${s}: ${e}`);
       }
     }
   }
