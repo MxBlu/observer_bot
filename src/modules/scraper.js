@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const crypto = require('crypto');
 
 // Feed requesting settings
 const refreshInterval = process.env.SCRAPER_REFRESH_INTERVAL;
@@ -19,15 +20,20 @@ module.exports = (db, imm, logger) => {
         let response = await fetch(s);
 
         // Extract site text if response is 2xx
-        let siteText = null;
+        let siteHash = null;
         if (response.ok) {
+          let siteText = null;
           siteText = await response.text();
+
+          let hash = crypto.createHash('sha512');
+          hash.update(siteText);
+          siteHash = hash.digest('hex');
         }
 
         // No existing fetch
         if (oldSiteData == null) {
           oldSiteData = {
-            data: siteText,
+            data: siteHash,
             status: response.status,
             lastUpdated: new Date()
           };
@@ -36,9 +42,9 @@ module.exports = (db, imm, logger) => {
 
         // Change detected
         if ((oldSiteData.status != response.status) || 
-            (oldSiteData.data != siteText)) {
+            (oldSiteData.data != siteHash)) {
           let newSiteData = {
-            data: siteText,
+            data: siteHash,
             status: response.status,
             oldData: oldSiteData,
             lastUpdated: new Date()
